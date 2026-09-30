@@ -254,6 +254,7 @@ export default function App() {
         isOpen={isContactOpen}
         onClose={() => setIsContactOpen(false)}
         defaultService={defaultContactService}
+        profile={profile}
       />
 
       {/* System Architecture Details Modal */}
