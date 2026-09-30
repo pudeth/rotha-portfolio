@@ -1,12 +1,18 @@
-import React from 'react';
-import { Building2, MapPin, Calendar } from 'lucide-react';
+import React, { useState } from 'react';
+import { Building2, MapPin, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import { useLanguage } from '../context/LanguageContext';
 import { experiencesKhmer } from '../data/translations';
 
+const INITIAL_COUNT = 3;
+
 export default function ExperienceTimeline({ experiences }) {
   const { language } = useLanguage();
   const isKhmer = language === 'km';
+  const [showAll, setShowAll] = useState(false);
+
+  const displayedExperiences = showAll ? experiences : experiences.slice(0, INITIAL_COUNT);
+  const hasMore = experiences.length > INITIAL_COUNT;
 
   return (
     <section id="experience" className="py-8 md:py-12 relative overflow-hidden">
@@ -14,7 +20,7 @@ export default function ExperienceTimeline({ experiences }) {
         
         {/* Experience Cards List - Small, Clean Size (Position, Brand, Year) */}
         <div className="space-y-3 sm:space-y-3.5">
-          {experiences.map((exp, idx) => {
+          {displayedExperiences.map((exp, idx) => {
             const isCurrent = idx === 0;
             const kmData = isKhmer && experiencesKhmer[idx] ? experiencesKhmer[idx] : null;
 
@@ -23,7 +29,7 @@ export default function ExperienceTimeline({ experiences }) {
             const locationText = kmData?.location || exp.location;
 
             return (
-              <ScrollReveal key={idx} animation="fade-up" delay={Math.min(idx * 50, 200)}>
+              <ScrollReveal key={idx} animation="fade-up" delay={Math.min(idx * 40, 160)}>
                 {/* Career Card */}
                 <div className="bg-white rounded-2xl sm:rounded-3xl border border-neutral-200/90 hover:border-neutral-300 hover:shadow-md transition-all duration-200 overflow-hidden shadow-2xs">
                   <div className="p-4 sm:p-5 sm:px-6">
@@ -80,6 +86,29 @@ export default function ExperienceTimeline({ experiences }) {
             );
           })}
         </div>
+
+        {/* Show More / Show Less Button */}
+        {hasMore && (
+          <div className="flex justify-center mt-6 sm:mt-8">
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="inline-flex items-center gap-2 px-6 py-2.5 sm:py-3 rounded-full bg-white hover:bg-neutral-50 text-neutral-800 hover:text-[#F95721] font-bold text-xs sm:text-sm border border-neutral-200/90 hover:border-[#F95721]/40 shadow-xs hover:shadow-md transition-all cursor-pointer group"
+            >
+              <span>
+                {showAll
+                  ? (isKhmer ? 'បង្រួម' : 'Show Less')
+                  : (isKhmer 
+                      ? `បង្ហាញបន្ថែម (${experiences.length - INITIAL_COUNT} ទៀត)` 
+                      : `Show More (+${experiences.length - INITIAL_COUNT})`)}
+              </span>
+              {showAll ? (
+                <ChevronUp className="w-4 h-4 text-[#F95721] transition-transform group-hover:-translate-y-0.5" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-[#F95721] transition-transform group-hover:translate-y-0.5" />
+              )}
+            </button>
+          </div>
+        )}
 
       </div>
     </section>
