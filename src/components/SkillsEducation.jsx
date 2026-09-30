@@ -324,8 +324,8 @@ export default function SkillsEducation({ technicalSkills, education, certificat
                     </span>
                   </div>
 
-                  {/* Flexible, compact horizontal rows */}
-                  <div className="space-y-2.5">
+                  {/* Clean Simple Information List */}
+                  <div className="divide-y divide-neutral-100/90">
                     {technicalSkills.languages.map((l) => {
                       const lower = l.name.toLowerCase();
                       const config = lower.includes('khmer')
@@ -336,7 +336,7 @@ export default function SkillsEducation({ technicalSkills, education, certificat
                             displayName: isKhmer ? 'ភាសាខ្មែរ' : 'Khmer',
                             detail: isKhmer ? 'ស្ទាត់ជំនាញទ្វេភាសាកម្រិតខ្ពស់' : 'Native & Bilingual Mastery',
                             percentage: '100%',
-                            levelLabel: isKhmer ? 'កម្រិតមេ C2' : 'C2 Mastery'
+                            levelLabel: isKhmer ? 'កម្រិត C2 (ស្ទាត់ជំនាញ)' : 'C2 Native Mastery'
                           }
                         : lower.includes('english')
                         ? {
@@ -346,7 +346,7 @@ export default function SkillsEducation({ technicalSkills, education, certificat
                             displayName: isKhmer ? 'ភាសាអង់គ្លេស' : 'English',
                             detail: isKhmer ? 'ទំនាក់ទំនងការងារ & ប្រព័ន្ធបច្ចេកវិទ្យា' : 'Full Tech & Business Rails',
                             percentage: '85%',
-                            levelLabel: isKhmer ? 'កម្រិតស្ទាត់ C1' : 'C1 Fluent'
+                            levelLabel: isKhmer ? 'កម្រិត C1 (ស្ទាត់ជំនាញការងារ)' : 'C1 Professional Working'
                           }
                         : {
                             flag: '/flags/kr.svg',
@@ -355,13 +355,13 @@ export default function SkillsEducation({ technicalSkills, education, certificat
                             displayName: isKhmer ? 'ភាសាកូរ៉េ' : 'Korean',
                             detail: isKhmer ? 'ការសន្ទនា & ទំនាក់ទំនងទូទៅ' : 'Daily Conversational',
                             percentage: '40%',
-                            levelLabel: isKhmer ? 'កម្រិតមូលដ្ឋាន A2' : 'A2 Basic'
+                            levelLabel: isKhmer ? 'កម្រិត A2 (មូលដ្ឋាន)' : 'A2 Elementary'
                           };
 
                       return (
                         <div 
                           key={l.name}
-                          className="p-3 sm:p-3.5 rounded-2xl bg-[#FAF8F5] border border-neutral-200/70 hover:border-[#F95721]/50 hover:bg-white hover:shadow-xs transition-all duration-200 group flex items-center justify-between gap-3"
+                          className="py-3 sm:py-3.5 flex items-center justify-between gap-3 group transition-colors"
                         >
                           {/* Left: Flag + Language Name + Subtitle */}
                           <div className="flex items-center gap-3 min-w-0">
@@ -377,36 +377,51 @@ export default function SkillsEducation({ technicalSkills, education, certificat
                                 <h5 className="text-sm font-bold text-[#161616] group-hover:text-[#F95721] transition-colors leading-tight">
                                   {config.displayName}
                                 </h5>
-                                <span className="text-[10px] font-mono font-bold text-neutral-500 bg-white border border-neutral-200 px-1.5 py-0.2 rounded shadow-2xs shrink-0">
+                                <span className="text-[10px] font-mono font-bold text-neutral-500 bg-neutral-100 border border-neutral-200/60 px-1.5 py-0.5 rounded shrink-0">
                                   {config.cefr}
                                 </span>
                               </div>
-                              <p className="text-[11px] text-neutral-500 truncate leading-snug mt-0.5">
+                              <p className="text-[11px] text-neutral-400 truncate leading-snug mt-0.5">
                                 {config.detail}
                               </p>
                             </div>
                           </div>
 
-                          {/* Right: Status Badge & Fluency Meter */}
-                          <div className="flex flex-col items-end shrink-0 gap-1.5 min-w-[95px] sm:min-w-[110px]">
+                          {/* Right: Badge & Simple Fluency */}
+                          <div className="flex items-center gap-2.5 shrink-0">
+                            <div className="hidden sm:flex flex-col items-end">
+                              <span className="text-[10px] font-mono font-bold text-[#F95721]">
+                                {config.percentage}
+                              </span>
+                              <div className="h-1 w-12 bg-neutral-200/70 rounded-full overflow-hidden mt-0.5">
+                                <div 
+                                  className="h-full rounded-full bg-[#F95721]" 
+                                  style={{ width: config.percentage }} 
+                                />
+                              </div>
+                            </div>
                             <span className="text-[10px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#FFF0E8] text-[#F95721] border border-[#FDE8DF] whitespace-nowrap shadow-2xs">
                               {config.badge}
                             </span>
-                            <div className="flex items-center gap-2 w-full justify-end">
-                              <div className="h-1.5 w-14 sm:w-16 bg-neutral-200/70 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full rounded-full bg-gradient-to-r from-[#F95721] to-[#FF7748] transition-all duration-500"
-                                  style={{ width: config.percentage }}
-                                />
-                              </div>
-                              <span className="text-[10px] font-mono font-bold text-[#F95721] shrink-0">
-                                {config.percentage}
-                              </span>
-                            </div>
                           </div>
                         </div>
                       );
                     })}
+                  </div>
+
+                  {/* Clean Dedicated Card Footer */}
+                  <div className="pt-3.5 mt-2 border-t border-neutral-100 flex items-center justify-between flex-wrap gap-2 text-xs">
+                    <div className="flex items-center gap-2 text-neutral-500">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                      <span className="text-[11px] sm:text-xs font-medium text-neutral-500">
+                        {isKhmer 
+                          ? 'ត្រៀមខ្លួនសម្រាប់កិច្ចសហការអន្តរជាតិ & ការងារពីចម្ងាយ' 
+                          : 'Available for international & cross-border collaboration'}
+                      </span>
+                    </div>
+                    <span className="text-[11px] font-bold text-[#F95721] bg-[#FFF0E8] px-2.5 py-0.5 rounded-full border border-[#FDE8DF] shrink-0">
+                      {isKhmer ? '៣ ភាសា' : '3 Languages'}
+                    </span>
                   </div>
                 </div>
               </ScrollReveal>

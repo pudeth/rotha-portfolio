@@ -87,9 +87,25 @@ export default function Footer({ profile, onOpenContact }) {
               <span className="text-[#F95721] inline-block transition-transform duration-300 group-hover:scale-125">.</span>
             </a>
             
-            <p className="text-neutral-400 text-xs sm:text-sm max-w-sm mb-4 leading-relaxed">
+            <p className="text-neutral-400 text-xs sm:text-sm max-w-sm mb-3 leading-relaxed">
               {isKhmer && isRotha ? t.footer.summary : (profile.bio || 'Designing bold brands that make impact.')}
             </p>
+
+            {/* Simple Language Skills Information */}
+            <div className="flex items-center gap-2 mb-4 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-900 border border-neutral-800 text-[11px] font-medium text-neutral-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#F95721]"></span>
+                <span>{isKhmer ? '🇰🇭 ភាសាខ្មែរ (Native)' : '🇰🇭 Khmer (Native)'}</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-900 border border-neutral-800 text-[11px] font-medium text-neutral-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#F95721]"></span>
+                <span>{isKhmer ? '🇬🇧 អង់គ្លេស (C1)' : '🇬🇧 English (C1)'}</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-900 border border-neutral-800 text-[11px] font-medium text-neutral-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-neutral-500"></span>
+                <span>{isKhmer ? '🇰🇷 កូរ៉េ (A2)' : '🇰🇷 Korean (A2)'}</span>
+              </span>
+            </div>
 
             {/* Social Icons */}
             <div className="flex items-center gap-2 flex-wrap">
