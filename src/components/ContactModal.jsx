@@ -80,63 +80,69 @@ export default function ContactModal({ isOpen, onClose, defaultService = '', pro
       .replace(/https?:\/\/t\.me\//, '')
       .trim();
 
-    const topicsFormatted = selectedServices.length > 0 
-      ? selectedServices.map((s) => `  • ${s}`).join('\n')
-      : (isKhmer ? '  • ប្រឹក្សាយោបល់ទូទៅ (General Architecture Consultation)' : '  • General Architecture Consultation');
+    const border = '----------------------------------------';
+    const topicsList = selectedServices.length > 0 
+      ? selectedServices.join(', ')
+      : (isKhmer ? 'ប្រឹក្សាយោបល់ទូទៅ' : 'General Architecture Consultation');
 
     const lines = isKhmer ? [
-      '━━━━━━━━━━━━━━━━━━━━━━━━━',
-      '💼 សំណើពិភាក្សាគម្រោង / PORTFOLIO INQUIRY',
-      '━━━━━━━━━━━━━━━━━━━━━━━━━',
-      '',
+      border,
+      '💼 សំណើពិភាក្សាគម្រោង (PORTFOLIO INQUIRY)',
+      border,
       `ជំរាបសួរ ${recipientName},`,
       '',
       'ខ្ញុំបានទាក់ទងមកតាមរយៈគេហទំព័រ Portfolio ផ្ទាល់ខ្លួន សម្រាប់កិច្ចពិភាក្សាការងារ៖',
       '',
-      '👤 ព័ត៌មានទំនាក់ទំនង (CLIENT DETAILS):',
-      `• ឈ្មោះ៖ ${name.trim()}`,
-      `• អ៊ីមែល៖ ${email.trim()}`,
+      `👤 ឈ្មោះ (Name): ${name.trim()}`,
+      `📧 អ៊ីមែល (Email): ${email.trim()}`,
+      `💼 ប្រធានបទ (Topics): ${topicsList}`,
+      `💰 កញ្ចប់ថវិកា (Budget): ${budget}`,
       '',
-      '🎯 ប្រធានបទដែលចង់ពិភាក្សា (SELECTED TOPICS):',
-      topicsFormatted,
-      '',
-      '💰 កញ្ចប់ថវិកាប៉ាន់ស្មាន (ESTIMATED BUDGET):',
-      `• ${budget}`,
-      '',
-      '📝 ព័ត៌មានលម្អិតនៃគម្រោង / សារ (MESSAGE):',
+      `📝 សារ (Message):`,
       message.trim(),
       '',
-      '─────────────────────────',
-      '🌐 ផ្ញើចេញពីគេហទំព័រ៖ rotha-portfolio.vercel.app'
+      border,
+      '🌐 ផ្ញើចេញពី rotha-portfolio.vercel.app'
     ] : [
-      '━━━━━━━━━━━━━━━━━━━━━━━━━',
-      '💼 NEW PROJECT INQUIRY / CONSULTATION',
-      '━━━━━━━━━━━━━━━━━━━━━━━━━',
-      '',
+      border,
+      '💼 NEW PROJECT INQUIRY',
+      border,
       `Hello ${recipientName},`,
       '',
-      'I am reaching out via your professional portfolio to discuss a potential project & collaboration.',
+      'I am reaching out via your professional portfolio to discuss a project & collaboration:',
       '',
-      '👤 CLIENT CONTACT INFO:',
-      `• Name: ${name.trim()}`,
-      `• Email: ${email.trim()}`,
+      `👤 Name: ${name.trim()}`,
+      `📧 Email: ${email.trim()}`,
+      `💼 Topics: ${topicsList}`,
+      `💰 Budget: ${budget}`,
       '',
-      '🎯 INTERESTED SERVICES / TOPICS:',
-      topicsFormatted,
-      '',
-      '💰 ESTIMATED BUDGET:',
-      `• ${budget}`,
-      '',
-      '📝 PROJECT DETAILS / MESSAGE:',
+      `📝 Message:`,
       message.trim(),
       '',
-      '─────────────────────────',
-      '🌐 Sent via Portfolio: rotha-portfolio.vercel.app'
+      border,
+      '🌐 Sent via rotha-portfolio.vercel.app'
     ];
 
-    const messageBody = lines.join('\n');
-    const directTelegramUrl = `https://t.me/${cleanUsername}?text=${encodeURIComponent(messageBody)}`;
+    const fullMessage = lines.join('\n');
 
+    // Copy to clipboard for instant convenience
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(fullMessage).catch(() => {});
+    }
+
+    // Ensure URL encoding stays strictly within Telegram's nginx 3000 byte buffer limit
+    let encodedText = encodeURIComponent(fullMessage);
+    if (encodedText.length > 2500) {
+      const shortMsg = message.trim().slice(0, 100) + '...';
+      const shortLines = [...lines];
+      const msgIndex = shortLines.findIndex((l) => l.startsWith('📝'));
+      if (msgIndex !== -1 && msgIndex + 1 < shortLines.length) {
+        shortLines[msgIndex + 1] = shortMsg;
+      }
+      encodedText = encodeURIComponent(shortLines.join('\n'));
+    }
+
+    const directTelegramUrl = `https://t.me/${cleanUsername}?text=${encodedText}`;
     setTelegramRedirectUrl(directTelegramUrl);
 
     // Launch Telegram chat in new tab
