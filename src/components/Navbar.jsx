@@ -30,10 +30,13 @@ export default function Navbar({ brandName, onOpenContact, activeSection, onOpen
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         
-        {/* Brand Logo */}
-        <a href="#home" className="group flex items-center gap-1 text-2xl md:text-3xl font-extrabold tracking-tight text-[#161616]">
-          <span>{brandName.replace('.', '')}</span>
-          <span className="text-[#F95721] transition-transform duration-300 group-hover:scale-125">.</span>
+        {/* Brand Logo with New Custom Typography & Cyan Dot */}
+        <a href="#home" className="group flex items-center select-none py-1">
+          <img 
+            src="/logo_text_dark.png" 
+            alt={brandName} 
+            className="h-7 sm:h-8 md:h-8.5 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
+          />
         </a>
 
         {/* Center Pill Nav - Exact match with UI reference */}

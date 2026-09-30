@@ -103,8 +103,12 @@ export default function Footer({ profile, onOpenContact }) {
           
           {/* Column 1: Brand & Socials */}
           <div className="col-span-2 md:col-span-4 lg:col-span-5">
-            <a href="#home" className="inline-block text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-2 sm:mb-3">
-              {profile.brandName.replace('.', '')}<span className="text-[#F95721]">.</span>
+            <a href="#home" className="inline-block mb-2 sm:mb-3 group select-none">
+              <img 
+                src="/logo_text_white.png" 
+                alt={profile.brandName} 
+                className="h-7 sm:h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
+              />
             </a>
             
             <p className="text-neutral-400 text-xs sm:text-sm max-w-sm mb-4 leading-relaxed">
