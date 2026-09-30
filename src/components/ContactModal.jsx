@@ -80,23 +80,58 @@ export default function ContactModal({ isOpen, onClose, defaultService = '', pro
       .replace(/https?:\/\/t\.me\//, '')
       .trim();
 
-    const serviceText = selectedServices.length > 0 
-      ? selectedServices.join(', ') 
-      : (isKhmer ? 'ប្រឹក្សាយោបល់ទូទៅ' : 'General Inquiry');
+    const topicsFormatted = selectedServices.length > 0 
+      ? selectedServices.map((s) => `  • ${s}`).join('\n')
+      : (isKhmer ? '  • ប្រឹក្សាយោបល់ទូទៅ (General Architecture Consultation)' : '  • General Architecture Consultation');
 
-    const lines = [
-      `👋 ${isKhmer ? `ជំរាបសួរ ${recipientName}` : `Hello ${recipientName}`},`,
+    const lines = isKhmer ? [
+      '━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '💼 សំណើពិភាក្សាគម្រោង / PORTFOLIO INQUIRY',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━',
       '',
-      isKhmer 
-        ? 'ខ្ញុំបានទាក់ទងមកតាមរយៈគេហទំព័រ Portfolio របស់អ្នក៖' 
-        : 'I am reaching out via your portfolio website:',
-      `👤 ${isKhmer ? 'ឈ្មោះ' : 'Name'}: ${name.trim()}`,
-      `📧 ${isKhmer ? 'អ៊ីមែល' : 'Email'}: ${email.trim()}`,
-      `💼 ${isKhmer ? 'ប្រធានបទ' : 'Topics'}: ${serviceText}`,
-      `💰 ${isKhmer ? 'កញ្ចប់ថវិកា' : 'Budget'}: ${budget}`,
+      `ជំរាបសួរ ${recipientName},`,
       '',
-      `📝 ${isKhmer ? 'សារពិភាក្សា' : 'Message'}:`,
-      message.trim()
+      'ខ្ញុំបានទាក់ទងមកតាមរយៈគេហទំព័រ Portfolio ផ្ទាល់ខ្លួន សម្រាប់កិច្ចពិភាក្សាការងារ៖',
+      '',
+      '👤 ព័ត៌មានទំនាក់ទំនង (CLIENT DETAILS):',
+      `• ឈ្មោះ៖ ${name.trim()}`,
+      `• អ៊ីមែល៖ ${email.trim()}`,
+      '',
+      '🎯 ប្រធានបទដែលចង់ពិភាក្សា (SELECTED TOPICS):',
+      topicsFormatted,
+      '',
+      '💰 កញ្ចប់ថវិកាប៉ាន់ស្មាន (ESTIMATED BUDGET):',
+      `• ${budget}`,
+      '',
+      '📝 ព័ត៌មានលម្អិតនៃគម្រោង / សារ (MESSAGE):',
+      message.trim(),
+      '',
+      '─────────────────────────',
+      '🌐 ផ្ញើចេញពីគេហទំព័រ៖ rotha-portfolio.vercel.app'
+    ] : [
+      '━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '💼 NEW PROJECT INQUIRY / CONSULTATION',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '',
+      `Hello ${recipientName},`,
+      '',
+      'I am reaching out via your professional portfolio to discuss a potential project & collaboration.',
+      '',
+      '👤 CLIENT CONTACT INFO:',
+      `• Name: ${name.trim()}`,
+      `• Email: ${email.trim()}`,
+      '',
+      '🎯 INTERESTED SERVICES / TOPICS:',
+      topicsFormatted,
+      '',
+      '💰 ESTIMATED BUDGET:',
+      `• ${budget}`,
+      '',
+      '📝 PROJECT DETAILS / MESSAGE:',
+      message.trim(),
+      '',
+      '─────────────────────────',
+      '🌐 Sent via Portfolio: rotha-portfolio.vercel.app'
     ];
 
     const messageBody = lines.join('\n');
