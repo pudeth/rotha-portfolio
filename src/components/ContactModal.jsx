@@ -13,6 +13,7 @@ export default function ContactModal({ isOpen, onClose, defaultService = '', pro
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [telegramRedirectUrl, setTelegramRedirectUrl] = useState('');
 
   // Sync default service when opened
   useEffect(() => {
@@ -73,10 +74,47 @@ export default function ContactModal({ isOpen, onClose, defaultService = '', pro
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    const cleanUsername = (profile?.telegram || 'rotha_kh')
+      .replace('@', '')
+      .replace(/https?:\/\/t\.me\//, '')
+      .trim();
+
+    const serviceText = selectedServices.length > 0 
+      ? selectedServices.join(', ') 
+      : (isKhmer ? 'ប្រឹក្សាយោបល់ទូទៅ' : 'General Inquiry');
+
+    const lines = [
+      `👋 ${isKhmer ? `ជំរាបសួរ ${recipientName}` : `Hello ${recipientName}`},`,
+      '',
+      isKhmer 
+        ? 'ខ្ញុំបានទាក់ទងមកតាមរយៈគេហទំព័រ Portfolio របស់អ្នក៖' 
+        : 'I am reaching out via your portfolio website:',
+      `👤 ${isKhmer ? 'ឈ្មោះ' : 'Name'}: ${name.trim()}`,
+      `📧 ${isKhmer ? 'អ៊ីមែល' : 'Email'}: ${email.trim()}`,
+      `💼 ${isKhmer ? 'ប្រធានបទ' : 'Topics'}: ${serviceText}`,
+      `💰 ${isKhmer ? 'កញ្ចប់ថវិកា' : 'Budget'}: ${budget}`,
+      '',
+      `📝 ${isKhmer ? 'សារពិភាក្សា' : 'Message'}:`,
+      message.trim()
+    ];
+
+    const messageBody = lines.join('\n');
+    const directTelegramUrl = `https://t.me/${cleanUsername}?text=${encodeURIComponent(messageBody)}`;
+
+    setTelegramRedirectUrl(directTelegramUrl);
+
+    // Launch Telegram chat in new tab
+    try {
+      window.open(directTelegramUrl, '_blank', 'noopener,noreferrer');
+    } catch (err) {
+      console.error('Failed to open Telegram link', err);
+    }
+
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitted(true);
-    }, 600);
+    }, 400);
   };
 
   const resetForm = () => {
@@ -124,22 +162,40 @@ export default function ContactModal({ isOpen, onClose, defaultService = '', pro
         {/* Scrollable Content Body */}
         <div className="overflow-y-auto px-5 sm:px-8 py-5 sm:py-6 space-y-6 custom-scrollbar">
           {submitted ? (
-            <div className="py-12 flex flex-col items-center text-center animate-in zoom-in-95 duration-300">
+            <div className="py-10 flex flex-col items-center text-center animate-in zoom-in-95 duration-300">
               <div className="w-16 h-16 rounded-full bg-[#F95721]/15 text-[#F95721] flex items-center justify-center mb-5 ring-8 ring-[#F95721]/5">
                 <CheckCircle2 className="w-9 h-9 stroke-[2.5]" />
               </div>
               <h3 className="text-2xl sm:text-3xl font-extrabold mb-2.5">
-                {isKhmer ? 'ទទួលបានសារជោគជ័យ!' : 'Message Received!'}
+                {isKhmer ? 'សារបានបញ្ជូនទៅ Telegram!' : 'Opening in Telegram!'}
               </h3>
-              <p className="text-neutral-400 text-sm max-w-md mb-6 leading-relaxed">
-                {t.contactModal.success}
+              <p className="text-neutral-400 text-xs sm:text-sm max-w-md mb-6 leading-relaxed">
+                {isKhmer 
+                  ? `សាររបស់អ្នកត្រូវបានចងក្រងជាស្រេច។ សូមចុចប៊ូតុង Send នៅក្នុងកម្មវិធី Telegram ដើម្បីផ្ញើទៅកាន់ ${recipientName}។`
+                  : `Your inquiry has been compiled with all project details. Simply tap Send in your Telegram app to reach ${recipientName} directly.`}
               </p>
-              <button
-                onClick={resetForm}
-                className="bg-[#F95721] hover:bg-[#e44612] text-white px-8 py-3 rounded-full font-bold text-sm transition-all shadow-lg shadow-[#F95721]/25 hover:shadow-[#F95721]/40 cursor-pointer"
-              >
-                {isKhmer ? 'បិទផ្ទាំងនេះ' : 'Close & Done'}
-              </button>
+              
+              <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-sm">
+                {telegramRedirectUrl && (
+                  <a
+                    href={telegramRedirectUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-2 bg-[#F95721] hover:bg-[#e44612] text-white py-3 rounded-full font-bold text-sm transition-all shadow-md shadow-[#F95721]/30 cursor-pointer"
+                  >
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                      <path d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l-.313 4.674c.458 0 .66-.21.916-.457l2.199-2.138 4.573 3.378c.842.464 1.446.225 1.656-.78l2.997-14.121c.307-1.23-.469-1.786-1.272-1.419z" />
+                    </svg>
+                    <span>{isKhmer ? 'បើក Telegram ម្តងទៀត' : 'Open in Telegram'}</span>
+                  </a>
+                )}
+                <button
+                  onClick={resetForm}
+                  className="w-full bg-neutral-800 hover:bg-neutral-700 text-neutral-200 py-3 rounded-full font-semibold text-sm transition-colors cursor-pointer"
+                >
+                  {isKhmer ? 'បិទផ្ទាំងនេះ' : 'Done & Close'}
+                </button>
+              </div>
             </div>
           ) : (
             <>
@@ -306,15 +362,22 @@ export default function ContactModal({ isOpen, onClose, defaultService = '', pro
                   </div>
                 </div>
 
-                {/* Submit CTA */}
+                {/* Submit CTA - Sends to Telegram */}
                 <div className="pt-2">
                   <button
                     type="submit"
                     disabled={isSubmitting}
                     className="w-full group flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#F95721] to-[#FF6B35] hover:from-[#e44612] hover:to-[#F95721] text-white py-3.5 sm:py-4 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base shadow-lg shadow-[#F95721]/25 hover:shadow-[#F95721]/40 transition-all duration-300 active:scale-[0.99] cursor-pointer disabled:opacity-70"
                   >
-                    <span>{isSubmitting ? (t.contactModal.sending || 'Sending...') : t.contactModal.submitButton}</span>
-                    <Send className="w-4 h-4 stroke-[2.2] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5" />
+                    <svg className="w-4.5 h-4.5 fill-current transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24">
+                      <path d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l-.313 4.674c.458 0 .66-.21.916-.457l2.199-2.138 4.573 3.378c.842.464 1.446.225 1.656-.78l2.997-14.121c.307-1.23-.469-1.786-1.272-1.419z" />
+                    </svg>
+                    <span>
+                      {isSubmitting 
+                        ? (isKhmer ? 'កំពុងភ្ជាប់ទៅកាន់ Telegram...' : 'Connecting to Telegram...') 
+                        : (isKhmer ? 'ផ្ញើសារទៅកាន់ Telegram' : 'Send Message to Telegram')}
+                    </span>
+                    <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </button>
                 </div>
               </form>
