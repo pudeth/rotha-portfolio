@@ -103,12 +103,15 @@ export default function Footer({ profile, onOpenContact }) {
           
           {/* Column 1: Brand & Socials */}
           <div className="col-span-2 md:col-span-4 lg:col-span-5">
-            <a href="#home" className="inline-block mb-2 sm:mb-3 group select-none">
+            <a href="#home" className="inline-flex items-center gap-2.5 mb-2 sm:mb-3 group select-none">
               <img 
-                src="/logo_text_white.png" 
-                alt={profile.brandName} 
-                className="h-7 sm:h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
+                src="/logo.png" 
+                alt={(profile.brandName || 'rotha').replace('.', '')} 
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl object-cover shadow-xs transition-transform duration-300 group-hover:scale-105" 
               />
+              <span className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                {(profile.brandName || 'rotha').replace('.', '')}<span className="text-[#F95721] inline-block transition-transform duration-300 group-hover:scale-125">.</span>
+              </span>
             </a>
             
             <p className="text-neutral-400 text-xs sm:text-sm max-w-sm mb-4 leading-relaxed">

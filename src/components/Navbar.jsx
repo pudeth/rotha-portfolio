@@ -30,13 +30,16 @@ export default function Navbar({ brandName, onOpenContact, activeSection, onOpen
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         
-        {/* Brand Logo with New Custom Typography & Cyan Dot */}
-        <a href="#home" className="group flex items-center select-none py-1">
+        {/* Brand Logo with New Custom Emblem & rotha. */}
+        <a href="#home" className="group flex items-center gap-2.5 select-none py-1">
           <img 
-            src="/logo_text_dark.png" 
-            alt={brandName} 
-            className="h-7 sm:h-8 md:h-8.5 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
+            src="/logo.png" 
+            alt={(brandName || 'rotha').replace('.', '')} 
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl object-cover shadow-xs border border-[#F95721]/20 transition-transform duration-300 group-hover:scale-105" 
           />
+          <span className="text-xl sm:text-2xl font-black tracking-tight text-[#161616]">
+            {(brandName || 'rotha').replace('.', '')}<span className="text-[#F95721] inline-block transition-transform duration-300 group-hover:scale-125">.</span>
+          </span>
         </a>
 
         {/* Center Pill Nav - Exact match with UI reference */}
