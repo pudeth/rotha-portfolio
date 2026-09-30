@@ -1,6 +1,7 @@
 import React from 'react';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import AiTranslateToggle from './AiTranslateToggle';
 
 export default function Footer({ profile, onOpenContact }) {
   const { language, t } = useLanguage();
@@ -184,9 +185,10 @@ export default function Footer({ profile, onOpenContact }) {
         </div>
 
         {/* Bottom Sub-Footer Bar */}
-        <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-xs text-neutral-500">
-          <p>© 2026 {profile.name}. {t.footer.rights}</p>
-          <div className="flex items-center gap-4 sm:gap-6 flex-wrap justify-center">
+        <div className="pt-6 sm:pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-500">
+          <p className="text-center md:text-left">© 2026 {profile.name}. {t.footer.rights}</p>
+          <div className="flex items-center gap-3 sm:gap-5 flex-wrap justify-center">
+            <AiTranslateToggle variant="inline" />
             <a href="#privacy" className="hover:text-neutral-300 transition-colors">{isKhmer ? 'គោលការណ៍ឯកជនភាព' : 'Privacy Policy'}</a>
             <a href="#terms" className="hover:text-neutral-300 transition-colors">{isKhmer ? 'លក្ខខណ្ឌប្រើប្រាស់' : 'Terms & Conditions'}</a>
           </div>

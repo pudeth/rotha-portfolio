@@ -1,16 +1,63 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sparkles } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function AiTranslateToggle({ variant = 'floating' }) {
   const { language, switchLanguage, isAiTranslating } = useLanguage();
+  const [isNearFooter, setIsNearFooter] = useState(false);
 
+  // Auto-hide floating button when approaching footer to never block text
+  useEffect(() => {
+    if (variant !== 'floating') return;
+
+    const checkScrollPosition = () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      
+      // If within 280px of bottom, hide floating button
+      if (scrollY + windowHeight >= docHeight - 280) {
+        setIsNearFooter(true);
+      } else {
+        setIsNearFooter(false);
+      }
+    };
+
+    window.addEventListener('scroll', checkScrollPosition, { passive: true });
+    checkScrollPosition();
+
+    return () => window.removeEventListener('scroll', checkScrollPosition);
+  }, [variant]);
+
+  // Inline Variant (for header/footer flexbox integration)
+  if (variant === 'inline') {
+    return (
+      <button
+        onClick={() => switchLanguage(language === 'en' ? 'km' : 'en')}
+        className="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-800 hover:border-[#F95721] transition-all cursor-pointer select-none text-xs font-semibold"
+        title={language === 'en' ? 'Smart AI Translation: Switch to ភាសាខ្មែរ' : 'Smart AI Translation: Switch to English'}
+      >
+        <Sparkles className={`w-3.5 h-3.5 text-[#F95721] ${isAiTranslating ? 'animate-spin' : ''}`} />
+        <div className="w-4 h-3 rounded overflow-hidden shadow-2xs border border-white/20 shrink-0">
+          <img 
+            src={language === 'en' ? '/flags/kh.svg' : '/flags/gb.svg'} 
+            alt={language === 'en' ? 'Cambodia Flag' : 'UK Flag'} 
+            className="w-full h-full object-cover" 
+          />
+        </div>
+        <span>{language === 'en' ? 'ភាសាខ្មែរ (AI)' : 'English (AI)'}</span>
+      </button>
+    );
+  }
+
+  // Floating Variant: Automatically hides near footer so it never blocks copyright/footer text
   return (
     <>
-      {/* The Single Floating Smart AI Button */}
       <aside 
         aria-label="Language selector"
-        className="fixed bottom-5 left-5 z-40"
+        className={`fixed bottom-5 left-5 z-40 transition-all duration-300 ${
+          isNearFooter ? 'opacity-0 translate-y-6 pointer-events-none scale-90' : 'opacity-100 translate-y-0 scale-100'
+        }`}
       >
         <button
           onClick={() => switchLanguage(language === 'en' ? 'km' : 'en')}

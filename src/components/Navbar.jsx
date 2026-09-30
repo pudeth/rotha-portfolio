@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 export default function Navbar({ brandName, onOpenContact, activeSection, onOpenCv }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { t, language } = useLanguage();
+  const { t, language, switchLanguage } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,6 +59,22 @@ export default function Navbar({ brandName, onOpenContact, activeSection, onOpen
 
         {/* Right CTA Buttons */}
         <div className="hidden sm:flex items-center gap-2 sm:gap-2.5">
+          {/* Language Switcher */}
+          <button
+            onClick={() => switchLanguage(language === 'en' ? 'km' : 'en')}
+            className="flex items-center gap-1.5 bg-[#FAF7F2] hover:bg-white text-[#161616] px-3 py-2 rounded-full text-xs font-bold border border-neutral-300 shadow-xs hover:border-[#F95721] transition-all cursor-pointer select-none"
+            title={language === 'en' ? 'Switch to ភាសាខ្មែរ' : 'Switch to English'}
+          >
+            <div className="w-4 h-3 rounded overflow-hidden shadow-2xs border border-black/10 shrink-0">
+              <img 
+                src={language === 'en' ? '/flags/kh.svg' : '/flags/gb.svg'} 
+                alt="flag" 
+                className="w-full h-full object-cover" 
+              />
+            </div>
+            <span>{language === 'en' ? 'KH' : 'EN'}</span>
+          </button>
+
           {/* View CV Button */}
           <button
             onClick={onOpenCv}
@@ -80,15 +96,30 @@ export default function Navbar({ brandName, onOpenContact, activeSection, onOpen
           </button>
         </div>
 
-        {/* Mobile Hamburger & CV Button */}
-        <div className="lg:hidden flex items-center gap-2">
+        {/* Mobile Hamburger & Controls */}
+        <div className="lg:hidden flex items-center gap-1.5">
+          <button
+            onClick={() => switchLanguage(language === 'en' ? 'km' : 'en')}
+            className="flex items-center gap-1 bg-[#FAF7F2] text-[#161616] border border-neutral-300 px-2.5 py-1.5 rounded-full text-xs font-bold"
+          >
+            <div className="w-3.5 h-2.5 rounded overflow-hidden shrink-0">
+              <img 
+                src={language === 'en' ? '/flags/kh.svg' : '/flags/gb.svg'} 
+                alt="flag" 
+                className="w-full h-full object-cover" 
+              />
+            </div>
+            <span>{language === 'en' ? 'KH' : 'EN'}</span>
+          </button>
+
           <button
             onClick={onOpenCv}
-            className="flex items-center gap-1.5 bg-[#FAF7F2] text-[#161616] border border-neutral-300 px-3 py-1.5 rounded-full text-xs font-bold"
+            className="flex items-center gap-1 bg-[#FAF7F2] text-[#161616] border border-neutral-300 px-2.5 py-1.5 rounded-full text-xs font-bold"
           >
             <FileText className="w-3.5 h-3.5 text-[#F95721]" />
             <span>CV</span>
           </button>
+
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 rounded-full bg-[#191919] text-white hover:bg-neutral-800 transition-colors"
